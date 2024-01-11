@@ -1,3 +1,36 @@
+# Instrucciones Juego de Adivinanzas
+
+Este programa implementa un juego donde se debe aviniar un numero al azar dentro de un interale siguiendo pistas en C++.
+
+## Requisitos
+
+- Compilador de C++ (La ejección de prueba de este juego se hizo con Mingw32 por lo que es el que se recomienda)
+- Make (opcional, para facilitar la compilación)
+
+## Instrucciones de Ejecución
+
+1. Abre una terminal en el directorio del proyecto.
+
+2. Compila el programa utilizando el siguiente comando:
+    
+    mingw32-make build
+
+3. Ejecuta el juego con el siguiente comando
+
+    adivina.x
+
+4. Para limpiar los archivos utliza
+
+    mingw32-make clean
+
+## Ejecución manual
+
+    g++ -std=c++11 -Wall -c functions.cpp -o functions.o
+    g++ -std=c++11 -Wall -c main.cpp -o main.o
+    g++ -std=c++11 -Wall main.o functions.o -o adivina.x
+
+
+
 # Parte Teórica
 
 1. ¿Cuál es la principal diferencia entre C y C++?
