@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 
 // Funciones para implementar el juego
 int generarNumeroAleatorio(int min, int max);
@@ -8,7 +9,7 @@ void mostrarPistas(int numeroSecreto, int intento, int estimacion);
 void jugar(int modoJuego, int min, int max, int oportunidades);
 
 int main() {
-    // Semilla para generar números aleatorios
+    // Semilla para generar números aleatorios utilizando la hora
     std::srand(std::time(0));
 
     // Menú del juego
@@ -22,25 +23,35 @@ int main() {
     std::cin >> opcion;
 
     switch (opcion) {
-        case 1:
-        case 2: {
+        case 1: {
             int min, max, oportunidades;
-
             // Obtener el intervalo y el número de oportunidades
             std::cout << "Ingrese el valor mínimo del intervalo: ";
             std::cin >> min;
             std::cout << "Ingrese el valor máximo del intervalo: ";
             std::cin >> max;
-            std::cout << "Ingrese el número de oportunidades (un tercio del tamaño del intervalo): ";
-            std::cin >> oportunidades;
+            oportunidades = round((max-min)/3);
+            std::cout << "Tienes " << oportunidades << " oportunidades." << std::endl;
 
-            // Validar la opción del modo de juego
-            if (opcion == 1) {
-                jugar(1, min, max, oportunidades);
-            } else {
-                jugar(2, min, max, oportunidades);
-            }
+            jugar(1, min, max, oportunidades);
+            std::cout << "Gracias por jugar. Hasta luego.\n";
             break;
+
+        }
+        case 2: {
+            int min, max, oportunidades;
+            // Obtener el intervalo y el número de oportunidades
+            std::cout << "Ingrese el valor mínimo del intervalo: ";
+            std::cin >> min;
+            std::cout << "Ingrese el valor máximo del intervalo: ";
+            std::cin >> max;
+            oportunidades = round((max-min)/3);
+            std::cout << "Tienes " << oportunidades << " oportunidades." << std::endl;
+
+            jugar(2, min, max, oportunidades);
+            std::cout << "Gracias por jugar. Hasta luego.\n";
+            break;
+       
         }
         case 3:
             std::cout << "Gracias por jugar. Hasta luego.\n";
@@ -59,15 +70,31 @@ int generarNumeroAleatorio(int min, int max) {
 }
 
 // Función para mostrar pistas al usuario según el modo de juego
-void mostrarPistas(int numeroSecreto, int intento, int estimacion) {
-    if (estimacion == 0) {
+void mostrarPistas(int numeroSecreto, int intento, int estimacion, int modoJuego) {
+    if (estimacion == numeroSecreto) {
         std::cout << "¡Felicidades! Has adivinado el número secreto " << numeroSecreto << " en el intento " << intento << ".\n";
-    } else {
-        std::cout << "Intento " << intento << ": ";
-        if (estimacion > 0) {
-            std::cout << "Frío\n";
-        } else {
-            std::cout << "Caliente\n";
+    } 
+    
+    else {
+        if (modoJuego == 1){
+            if (estimacion > numeroSecreto) {
+                std::cout << "El número ingresado es mayor"<< std::endl;
+            } else {
+                std::cout << "El número ingresado es menor"<< std::endl;
+            }
+        }
+        else {
+            int diferencia = std::abs(numeroSecreto - estimacion);
+
+            if (diferencia <= 2) {
+                    std::cout << "Hirviendo"<< std::endl;
+                } else if (diferencia <= 5) {
+                    std::cout << "Caliente"<< std::endl;
+                } else if (diferencia <= 10) {
+                    std::cout << "Frío"<< std::endl;
+                } else {
+                    std::cout << "Congelado"<< std::endl;
+                }
         }
     }
 }
@@ -77,39 +104,21 @@ void jugar(int modoJuego, int min, int max, int oportunidades) {
     int numeroSecreto = generarNumeroAleatorio(min, max);
     int intento = 1;
 
-    std::cout << "¡Adivina el número secreto entre " << min << " y " << max << "!\n";
+    std::cout << "¡Adivina el número secreto entre " << min << " y " << max << "!\n" << std::endl;
 
     while (intento <= oportunidades) {
         int estimacion;
 
-        std::cout << "Intento " << intento << ": ";
+        std::cout << "Intento " << intento << ": " << std::endl;
         int respuestaUsuario;
         std::cin >> respuestaUsuario;
 
         if (respuestaUsuario == numeroSecreto) {
-            mostrarPistas(numeroSecreto, intento, 0);
+            mostrarPistas(numeroSecreto, intento, respuestaUsuario, modoJuego);
             break;
         } else {
-            if (modoJuego == 1) {
-                estimacion = (respuestaUsuario < numeroSecreto) ? -1 : 1;
-            } else {
-                // Modo desafiante: proporcionar pistas como "congelado", "frío", "caliente", "hirviendo"
-                int diferencia = std::abs(numeroSecreto - respuestaUsuario);
-                if (diferencia == 0) {
-                    mostrarPistas(numeroSecreto, intento, 0);
-                    break;
-                } else if (diferencia <= 5) {
-                    estimacion = 3;  // "hirviendo"
-                } else if (diferencia <= 10) {
-                    estimacion = 2;  // "caliente"
-                } else if (diferencia <= 20) {
-                    estimacion = 1;  // "frío"
-                } else {
-                    estimacion = -1;  // "congelado"
-                }
-            }
-
-            mostrarPistas(numeroSecreto, intento, estimacion);
+            
+            mostrarPistas(numeroSecreto, intento, respuestaUsuario, modoJuego);
             intento++;
         }
     }
