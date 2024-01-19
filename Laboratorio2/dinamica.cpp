@@ -29,10 +29,14 @@ int main(){
 
     cout << "Variable local en Main: " << variableLocalMain << endl;
 
+    /*heap section*/
+
     int *variableDinamica = new int;
     *variableDinamica = 25;
 
-    cout << "Variable Dinamica: " << variableDinamica<< endl;
+    cout << "Variable Dinamica: " << variableDinamica << endl;
+
+    delete variableDinamica;
 
     return 0;
 }
